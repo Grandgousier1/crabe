@@ -38,6 +38,14 @@ app.add_middleware(
 )
 
 
+@app.get("/")
+async def root() -> dict[str, str]:
+    return {
+        "status": "ok",
+        "message": "Delivery Note Transformer API. Use POST /transform or GET /health.",
+    }
+
+
 @app.get("/health")
 async def health() -> dict[str, str]:
     return {"status": "ok"}
