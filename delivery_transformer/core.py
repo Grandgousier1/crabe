@@ -175,9 +175,7 @@ def extract_with_gemini(
             mime_type = "application/octet-stream"
         with open(image_path, "rb") as handle:
             data = handle.read()
-        contents.append(
-            genai.types.Part.from_bytes(data=data, mime_type=mime_type)
-        )
+        contents.append({"mime_type": mime_type, "data": data})
 
     response = model.generate_content(
         contents,
