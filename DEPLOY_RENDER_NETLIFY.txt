@@ -22,8 +22,9 @@ Prérequis :
 
 2. Préparer Netlify (frontend gratuit)
 --------------------------------------
-2.1. Dans `web/index.html`, mettez à jour l’URL de l’API pour qu’elle pointe vers Render :
-     valeur du champ (ligne 25) → `https://delivery-transformer.onrender.com/transform`
+2.1. Modifiez `web/config.js` :
+     - `apiEndpoint` = `https://delivery-transformer.onrender.com/transform`
+     - (Optionnel) `model` si vous souhaitez en utiliser un autre.
 2.2. Sur Netlify :
      - “Add new site” → “Import from Git”
      - Dossier de publication : `web`
@@ -32,7 +33,7 @@ Prérequis :
 3. Tests finaux
 ---------------
 3.1. Ouvrez le site Netlify.
-3.2. Téléversez des images ou collez un JSON structuré.
+3.2. Téléversez vos images (drag & drop ou bouton).
 3.3. Cliquez sur “Générer le PDF” ; la réponse (PDF) est fournie par Render.
 3.4. Contrôlez le PDF téléchargé (tri par animal, codes EAN avec codes-barres, cases OK/Qté).
 

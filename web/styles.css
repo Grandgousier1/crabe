@@ -1,119 +1,259 @@
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
   font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  background: #f4f6fb;
-  color: #1f2933;
+  background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+  color: #0f172a;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 40px 16px 48px;
 }
 
 .app {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 2.5rem 1.5rem 4rem;
+  width: min(960px, 100%);
 }
 
-.app__header h1 {
+.hero {
+  text-align: center;
+  color: #f9fafb;
+  margin-bottom: 24px;
+}
+
+.hero h1 {
   margin: 0;
-  font-size: 2rem;
+  font-size: clamp(2rem, 3vw, 2.6rem);
   font-weight: 700;
 }
 
-.app__header p {
-  margin-top: 0.5rem;
-  color: #4b5563;
-}
-
-.card {
-  margin-top: 2rem;
-  padding: 2rem;
-  border-radius: 16px;
-  background: #ffffff;
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
-}
-
-.card h2 {
-  margin-top: 0;
-  font-size: 1.3rem;
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
-}
-
-.form__field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-
-.form__field span {
-  font-weight: 600;
-  color: #1f2933;
-}
-
-.form__fieldset {
-  border: 1px solid #d5dbe7;
-  border-radius: 12px;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-input[type="text"],
-input[type="url"],
-input[type="password"],
-textarea {
-  width: 100%;
-  padding: 0.7rem 0.9rem;
-  border-radius: 10px;
-  border: 1px solid #d0d6e1;
-  background: #fdfdff;
+.hero p {
+  margin: 12px 0 0;
+  opacity: 0.85;
   font-size: 1rem;
-  color: inherit;
 }
 
-input[type="file"] {
+.panel {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: clamp(24px, 3vw, 32px);
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.panel__section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dropzone {
+  border: 2px dashed #9ca3af;
+  border-radius: 16px;
+  padding: 32px 24px;
+  text-align: center;
+  background: #f8fafc;
+  transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+}
+
+.dropzone.is-dragover {
+  border-color: #2563eb;
+  background: #eff6ff;
+  transform: translateY(-2px);
+}
+
+.dropzone.is-disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  transition: opacity 160ms ease;
+}
+
+.dropzone__icon {
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+}
+
+.dropzone__title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.dropzone__subtitle {
+  margin: 6px 0 10px;
+  color: #6b7280;
   font-size: 0.95rem;
 }
 
-textarea {
-  resize: vertical;
-  min-height: 120px;
+.dropzone__hint {
+  margin-top: 16px;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.file-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.file-list__item {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: #f1f5f9;
+  color: #1e293b;
+  font-size: 0.95rem;
+  align-items: center;
+}
+
+.file-list__item span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.panel__section--progress h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.progress__item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.progress__label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #475569;
+}
+
+progress {
+  width: 100%;
+  height: 12px;
+  border-radius: 999px;
+  overflow: hidden;
+  appearance: none;
+}
+
+progress::-webkit-progress-bar {
+  background: #e5e7eb;
+  border-radius: 999px;
+}
+
+progress::-webkit-progress-value {
+  background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+  border-radius: 999px;
+}
+
+.panel__section--actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
 .button {
-  align-self: flex-start;
-  padding: 0.75rem 1.6rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 999px;
   border: none;
-  background: #2563eb;
-  color: #ffffff;
+  padding: 0.7rem 1.6rem;
   font-weight: 600;
+  font-size: 0.95rem;
   cursor: pointer;
-  transition: background 180ms ease;
+  transition: transform 120ms ease, box-shadow 120ms ease, background 160ms ease;
 }
 
 .button:disabled {
   opacity: 0.6;
   cursor: wait;
+  box-shadow: none;
+  transform: none;
 }
 
-.button:hover:not(:disabled) {
-  background: #1d4ed8;
+.button--primary {
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+  color: white;
+  box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4);
+}
+
+.button--primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 30px rgba(37, 99, 235, 0.45);
+}
+
+.button--ghost {
+  background: transparent;
+  color: #1f2937;
+  border: 1px solid rgba(31, 41, 55, 0.15);
+}
+
+.button--ghost:hover:not(:disabled) {
+  background: rgba(37, 99, 235, 0.08);
+}
+
+.button--minimal {
+  background: transparent;
+  color: #3b82f6;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.85rem;
+}
+
+.panel__section--console {
+  background: #0f172a;
+  color: #e2e8f0;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.15);
+}
+
+.console__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 0.85rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.console__body {
+  margin: 0;
+  max-height: 160px;
+  overflow-y: auto;
+  font-family: "JetBrains Mono", "Fira Code", Menlo, monospace;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
 }
 
 .status {
-  margin-top: 1rem;
+  margin: 0;
+  font-weight: 600;
+  font-size: 0.95rem;
   min-height: 1.4em;
-  font-weight: 500;
-  color: #1f2933;
+  color: #1f2937;
 }
 
 .status--error {
@@ -121,20 +261,24 @@ textarea {
 }
 
 .app__footer {
-  margin-top: 3rem;
-  color: #6b7280;
-  font-size: 0.9rem;
+  margin-top: 32px;
   text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.85rem;
 }
 
 .app__footer code {
-  background: rgba(37, 99, 235, 0.08);
-  padding: 0.2rem 0.4rem;
-  border-radius: 4px;
+  background: rgba(248, 250, 252, 0.15);
+  padding: 0.1rem 0.4rem;
+  border-radius: 6px;
 }
 
-@media (max-width: 640px) {
-  .card {
-    padding: 1.5rem;
+@media (max-width: 720px) {
+  body {
+    padding: 24px 12px 36px;
+  }
+
+  .panel__section--actions {
+    flex-direction: column;
   }
 }

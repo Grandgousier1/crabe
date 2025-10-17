@@ -11,77 +11,79 @@
   </head>
   <body>
     <main class="app">
-      <header class="app__header">
+      <header class="hero">
         <h1>Delivery Note Transformer</h1>
-        <p>
-          Transformez vos bons de livraison scannés en PDF LaTeX harmonisés à l'aide de Gemini.
-        </p>
+        <p>Générez un PDF harmonisé à partir de vos bons de livraison scannés.</p>
       </header>
 
-      <section class="card">
-        <h2>Configuration</h2>
-        <form id="delivery-form" class="form">
-          <label class="form__field">
-            <span>URL de l'API</span>
-            <input
-              type="url"
-              id="endpoint"
-              name="endpoint"
-              required
-              value="http://localhost:8000/transform"
-            />
-          </label>
-
-          <label class="form__field">
-            <span>Modèle Gemini</span>
-            <input
-              type="text"
-              id="model"
-              name="model"
-              value="gemini-flash-latest"
-            />
-          </label>
-
-          <fieldset class="form__fieldset">
-            <legend>Images du bon</legend>
+      <section class="panel" id="delivery-app">
+        <div class="panel__section">
+          <div class="dropzone" id="dropzone">
             <input
               type="file"
-              id="images"
-              name="files"
+              id="file-input"
               accept=".png,.jpg,.jpeg,.pdf"
               multiple
+              hidden
             />
-            <small>
-              Ajoutez une ou plusieurs images. Laissez vide si vous fournissez un JSON structuré.
-            </small>
-          </fieldset>
+            <div class="dropzone__icon">📄</div>
+            <p class="dropzone__title">Glissez-déposez vos scans ici</p>
+            <p class="dropzone__subtitle">ou</p>
+            <button type="button" class="button" id="select-files">Choisir des fichiers</button>
+            <p class="dropzone__hint">Formats pris en charge : PNG, JPG, PDF scanné.</p>
+          </div>
+          <ul id="file-list" class="file-list"></ul>
+        </div>
 
-          <label class="form__field">
-            <span>JSON structuré (optionnel)</span>
-            <textarea
-              id="json-input"
-              placeholder='Collez ici le JSON conforme au schéma {"items": [...]}'
-              rows="6"
-            ></textarea>
-            <small>
-              Si ce champ est renseigné, les images sont ignorées et l'OCR n'est pas appelé.
-            </small>
-          </label>
+        <div class="panel__section panel__section--progress">
+          <h2>Progression</h2>
+          <div class="progress__item">
+            <div class="progress__label">
+              <span>Téléversement</span>
+              <span id="upload-label">0%</span>
+            </div>
+            <progress id="upload-progress" max="100" value="0"></progress>
+          </div>
+          <div class="progress__item">
+            <div class="progress__label">
+              <span>Traitement</span>
+              <span id="process-label">0%</span>
+            </div>
+            <progress id="process-progress" max="100" value="0"></progress>
+          </div>
+        </div>
 
-          <button type="submit" class="button">Générer le PDF</button>
-        </form>
+        <div class="panel__section panel__section--actions">
+          <button type="button" class="button button--primary" id="generate-btn">
+            Générer le PDF
+          </button>
+          <button type="button" class="button button--ghost" id="clear-btn">
+            Réinitialiser
+          </button>
+        </div>
+
+        <div class="panel__section panel__section--console">
+          <div class="console__header">
+            <span>Console</span>
+            <button type="button" class="button button--minimal" id="console-clear">
+              Effacer
+            </button>
+          </div>
+          <pre id="console-log" class="console__body"></pre>
+        </div>
 
         <p id="status" class="status" role="status"></p>
       </section>
 
       <footer class="app__footer">
         <small>
-          Hébergez ce dossier <code>web/</code> sur Netlify en tant que site statique.
-          Assurez-vous qu'un backend exécutant <code>api_server.py</code> est accessible via l'URL configurée et qu'il possède la variable <code>GEMINI_API_KEY</code>.
+          Déployez <code>web/</code> sur Netlify et pointez l'API vers votre instance Render.
+          La clé <code>GEMINI_API_KEY</code> reste stockée côté serveur.
         </small>
       </footer>
     </main>
 
+    <script src="config.js"></script>
     <script src="main.js" type="module"></script>
   </body>
 </html>

@@ -94,17 +94,29 @@ curl -X POST http://localhost:8000/transform \
 
 Le dossier `web/` contient une page statique :
 
-- `index.html` : interface utilisateur.
-- `main.js` : logique d'upload (Fetch API).
-- `styles.css` : style minimaliste.
+- `index.html` : interface drag & drop avec console intégrée.
+- `main.js` : upload via XHR, double barre de progression (téléversement + traitement) et logs en temps réel.
+- `styles.css` : thème clair/sombre minimaliste.
+- `config.js` : point de configuration de l’URL API.
+
+Avant déploiement, éditez `web/config.js` :
+
+```js
+window.DNT_CONFIG = {
+  apiEndpoint: "https://crabe.onrender.com/transform",
+  model: "gemini-flash-latest"
+};
+```
+
+Si `model` est omis, la valeur par défaut `gemini-flash-latest` est utilisée.
 
 Déploiement Netlify :
 
 1. Définissez le dossier de publication sur `web`.
-2. Utilisez `netlify deploy --dir=web` ou l'interface Netlify.
-3. Dans la page, configurez l'URL du backend (champ « URL de l'API ») : par exemple `https://<votre-backend>/transform`.
+2. `netlify deploy --dir=web` ou utilisez l’interface Netlify.
+3. Aucun champ à modifier côté client : le bouton “Générer le PDF” utilise l’URL définie dans `config.js`.
 
-⚠️ La clé Gemini doit rester côté serveur (dans `.env` ou vos secrets Netlify Functions). L'interface web n'expose plus de champ de saisie : configurez simplement l'URL de votre backend sécurisé.
+⚠️ La clé Gemini doit rester côté serveur (dans `.env` ou vos secrets Render). L’interface web ne transmet que les fichiers d’images.
 
 ### Déploiement Render + Netlify (gratuit)
 

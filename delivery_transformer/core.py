@@ -167,26 +167,32 @@ def extract_with_gemini(
     genai.configure(api_key=api_key)
     model = genai.GenerativeModel(model_name)
 
-    contents = [PROMPT_TEMPLATE.strip()]
-    for image_path in image_paths:
-        mime_type, _ = mimetypes.guess_type(image_path)
-        if not mime_type:
-            mime_type = "application/octet-stream"
-        with open(image_path, "rb") as handle:
-            data = handle.read()
-        contents.append(
-            genai.types.Part.from_data(data=data, mime_type=mime_type),
-        )
+    prompt = PROMPT_TEMPLATE.strip()
+    uploaded_files = []
+    try:
+        for image_path in image_paths:
+            mime_type, _ = mimetypes.guess_type(image_path)
+            upload_kwargs = {"path": image_path}
+            if mime_type:
+                upload_kwargs["mime_type"] = mime_type
+            uploaded = genai.upload_file(**upload_kwargs)
+            uploaded_files.append(uploaded)
 
-    response = model.generate_content(
-        contents,
-        generation_config=genai.types.GenerationConfig(
-            temperature=0.2,
-            top_p=0.8,
-            top_k=40,
-            response_mime_type="application/json",
-        ),
-    )
+        response = model.generate_content(
+            [prompt, *uploaded_files],
+            generation_config=genai.types.GenerationConfig(
+                temperature=0.2,
+                top_p=0.8,
+                top_k=40,
+                response_mime_type="application/json",
+            ),
+        )
+    finally:
+        for uploaded in uploaded_files:
+            try:
+                genai.delete_file(uploaded.name)
+            except Exception:
+                pass
 
     if not response.text:
         raise RuntimeError("Réponse vide de l'API Gemini.")
