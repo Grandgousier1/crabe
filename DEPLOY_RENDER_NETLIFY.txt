@@ -1,0 +1,41 @@
+Déploiement Render (backend) + Netlify (frontend)
+===============================================
+
+Prérequis :
+- Dépôt GitHub contenant ce projet
+- Clé Gemini prête (sans la committer)
+
+1. Préparer Render (backend gratuit)
+------------------------------------
+1.1. Créez un service “Web Service” à partir du dépôt GitHub.
+1.2. Paramètres :
+     - Runtime : Python 3 (plan gratuit suffisant)
+     - Build command : `pip install -r requirements.txt`
+     - Start command : `uvicorn api_server:app --host 0.0.0.0 --port 10000`
+     - (Optionnel) Env var `PYTHON_VERSION=3.11.8`
+1.3. Onglet “Environment” :
+     - `GEMINI_API_KEY` = votre clé Gemini (copiée depuis `.env`, ne pas la publier)
+     - `ALLOWED_ORIGINS` = domaine Netlify, ex : `https://votre-site.netlify.app`
+1.4. Déployez. L’URL Render ressemblera à :
+     `https://delivery-transformer.onrender.com`
+1.5. Vérifiez la santé : ouvrez `https://.../health` dans le navigateur, vous devez obtenir `{"status":"ok"}`.
+
+2. Préparer Netlify (frontend gratuit)
+--------------------------------------
+2.1. Dans `web/index.html`, mettez à jour l’URL de l’API pour qu’elle pointe vers Render :
+     valeur du champ (ligne 25) → `https://delivery-transformer.onrender.com/transform`
+2.2. Sur Netlify :
+     - “Add new site” → “Import from Git”
+     - Dossier de publication : `web`
+2.3. Déployez. La page statique utilisera l’endpoint Render. Vous pouvez changer cette URL dans l’interface si nécessaire.
+
+3. Tests finaux
+---------------
+3.1. Ouvrez le site Netlify.
+3.2. Téléversez des images ou collez un JSON structuré.
+3.3. Cliquez sur “Générer le PDF” ; la réponse (PDF) est fournie par Render.
+3.4. Contrôlez le PDF téléchargé (tri par animal, codes EAN avec codes-barres, cases OK/Qté).
+
+Notes de sécurité :
+- La clé Gemini reste côté Render (`GEMINI_API_KEY`) ; elle n’apparaît jamais dans la page Netlify.
+- `ALLOWED_ORIGINS` peut contenir plusieurs domaines séparés par des virgules si vous avez plusieurs fronts.

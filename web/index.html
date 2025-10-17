@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Delivery Note Transformer</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="app__header">
+        <h1>Delivery Note Transformer</h1>
+        <p>
+          Transformez vos bons de livraison scannés en PDF LaTeX harmonisés à l'aide de Gemini.
+        </p>
+      </header>
+
+      <section class="card">
+        <h2>Configuration</h2>
+        <form id="delivery-form" class="form">
+          <label class="form__field">
+            <span>URL de l'API</span>
+            <input
+              type="url"
+              id="endpoint"
+              name="endpoint"
+              required
+              value="http://localhost:8000/transform"
+            />
+          </label>
+
+          <label class="form__field">
+            <span>Modèle Gemini</span>
+            <input
+              type="text"
+              id="model"
+              name="model"
+              value="gemini-flash-latest"
+            />
+          </label>
+
+          <fieldset class="form__fieldset">
+            <legend>Images du bon</legend>
+            <input
+              type="file"
+              id="images"
+              name="files"
+              accept=".png,.jpg,.jpeg,.pdf"
+              multiple
+            />
+            <small>
+              Ajoutez une ou plusieurs images. Laissez vide si vous fournissez un JSON structuré.
+            </small>
+          </fieldset>
+
+          <label class="form__field">
+            <span>JSON structuré (optionnel)</span>
+            <textarea
+              id="json-input"
+              placeholder='Collez ici le JSON conforme au schéma {"items": [...]}'
+              rows="6"
+            ></textarea>
+            <small>
+              Si ce champ est renseigné, les images sont ignorées et l'OCR n'est pas appelé.
+            </small>
+          </label>
+
+          <button type="submit" class="button">Générer le PDF</button>
+        </form>
+
+        <p id="status" class="status" role="status"></p>
+      </section>
+
+      <footer class="app__footer">
+        <small>
+          Hébergez ce dossier <code>web/</code> sur Netlify en tant que site statique.
+          Assurez-vous qu'un backend exécutant <code>api_server.py</code> est accessible via l'URL configurée et qu'il possède la variable <code>GEMINI_API_KEY</code>.
+        </small>
+      </footer>
+    </main>
+
+    <script src="main.js" type="module"></script>
+  </body>
+</html>
