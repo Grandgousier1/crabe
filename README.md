@@ -10,7 +10,7 @@ Le projet propose :
 ## Prérequis
 
 - Python 3.10+
-- `pdflatex` accessible dans le `PATH`
+- `pdflatex` accessible dans le `PATH` **ou** `tectonic` (installé automatiquement via `pip install -r requirements.txt`)
 - Clé API Gemini stockée côté serveur/CLI (voir ci-dessous)
 
 ## Installation
@@ -35,6 +35,8 @@ GEMINI_API_KEY=sk-...
 
 La CLI et l'API chargent automatiquement cette valeur (via `python-dotenv`).  
 Vous pouvez aussi définir la variable d'environnement dans votre système.
+
+> Le rendu PDF privilégie `pdflatex` lorsqu'il est disponible. Si ce n'est pas le cas (comme sur Render), la dépendance `tectonic` incluse est utilisée automatiquement.
 
 ## CLI (mode batch)
 

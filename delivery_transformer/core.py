@@ -469,6 +469,16 @@ def compile_latex(
     keep_tex: bool,
     assets: Optional[Dict[Path, Path]] = None,
 ) -> None:
+    engine_path = shutil.which("pdflatex")
+    engine = "pdflatex"
+    if not engine_path:
+        engine_path = shutil.which("tectonic")
+        engine = "tectonic"
+    if not engine_path:
+        raise RuntimeError(
+            "Aucun moteur LaTeX trouvé. Installez `pdflatex` ou ajoutez `tectonic`."
+        )
+
     with tempfile.TemporaryDirectory() as tmpdir:
         tmpdir_path = Path(tmpdir)
         tex_path = tmpdir_path / "bon_livraison.tex"
@@ -480,12 +490,21 @@ def compile_latex(
                 destination.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(original, destination)
 
-        cmd = [
-            "pdflatex",
-            "-interaction=nonstopmode",
-            "-halt-on-error",
-            tex_path.name,
-        ]
+        if engine == "pdflatex":
+            cmd = [
+                engine_path,
+                "-interaction=nonstopmode",
+                "-halt-on-error",
+                tex_path.name,
+            ]
+        else:
+            cmd = [
+                engine_path,
+                "--outdir",
+                ".",
+                "--keep-logs",
+                tex_path.name,
+            ]
 
         completed = subprocess.run(
             cmd,
@@ -506,7 +525,7 @@ def compile_latex(
 
         if keep_tex:
             final_tex = output_pdf.with_suffix(".tex")
-            shutil.move(str(tex_path), final_tex)
+            shutil.copy2(tex_path, final_tex)
 
 
 def group_items_by_category(items: Iterable[DeliveryItem]) -> Dict[str, List[DeliveryItem]]:
