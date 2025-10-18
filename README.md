@@ -131,6 +131,7 @@ Déploiement Netlify :
      fly secrets set GEMINI_API_KEY=sk-...
      fly secrets set ALLOWED_ORIGINS=https://votre-site-netlify.netlify.app
      ```
+     (Vous pouvez utiliser `*` pour autoriser temporairement toutes les origines.)
    - Déployez : `fly deploy`
    - L’API est disponible via `https://<app-name>.fly.dev/` (POST `/transform`).
 3. **Netlify (front-end)** *(voir aussi `DEPLOY_FLY_NETLIFY.txt`)*

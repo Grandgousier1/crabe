@@ -185,12 +185,21 @@ def extract_with_gemini(
             temperature=0.2,
             top_p=0.8,
             top_k=40,
+            max_output_tokens=20000,
             response_mime_type="application/json",
         ),
     )
 
+    candidates = getattr(response, "candidates", None) or []
     if not response.text:
-        raise RuntimeError("Réponse vide de l'API Gemini.")
+        reason = "unknown"
+        if candidates:
+            finish_reason = getattr(candidates[0], "finish_reason", None)
+            if finish_reason is not None:
+                reason = str(finish_reason)
+        raise RuntimeError(
+            f"Réponse vide de l'API Gemini (finish_reason={reason})."
+        )
     try:
         payload = json.loads(response.text)
     except json.JSONDecodeError as exc:

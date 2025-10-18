@@ -17,6 +17,7 @@ Prérequis :
      fly secrets set GEMINI_API_KEY=sk-...
      fly secrets set ALLOWED_ORIGINS=https://votre-site-netlify.netlify.app
      ```
+     (Utilisez `*` si vous avez besoin de tester sans restriction CORS.)
 1.5. Déployer : `fly deploy`
 1.6. Vérifier la santé : `https://<app>.fly.dev/health`
      - L'API principale : `POST https://<app>.fly.dev/transform`
