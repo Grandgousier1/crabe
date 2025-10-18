@@ -1,0 +1,43 @@
+Déploiement Fly.io (backend) + Netlify (frontend)
+===============================================
+
+Prérequis :
+- Dépôt GitHub contenant ce projet
+- Clé Gemini prête (sans la committer)
+
+1. Préparer Fly.io (backend gratuit)
+------------------------------------
+1.1. Installer la CLI :
+     `curl -L https://fly.io/install.sh | sh`
+1.2. S'authentifier : `fly auth signup` (ou `fly auth login`).
+1.3. Depuis la racine du projet : `fly launch --no-deploy`
+     (acceptez la détection du Dockerfile, choisissez une région.)
+1.4. Définir les secrets :
+     ```bash
+     fly secrets set GEMINI_API_KEY=sk-...
+     fly secrets set ALLOWED_ORIGINS=https://votre-site-netlify.netlify.app
+     ```
+1.5. Déployer : `fly deploy`
+1.6. Vérifier la santé : `https://<app>.fly.dev/health`
+     - L'API principale : `POST https://<app>.fly.dev/transform`
+
+2. Préparer Netlify (frontend)
+------------------------------
+2.1. Mettre à jour `web/config.js` :
+     - `apiEndpoint` = `https://<app>.fly.dev/transform`
+     - (Optionnel) `model`
+2.2. Sur Netlify :
+     - "Add new site" → "Import from Git"
+     - Dossier de publication : `web`
+2.3. Déployer. La page statique consommera automatiquement l'API Fly.
+
+3. Tests finaux
+---------------
+3.1. Ouvrir le site Netlify.
+3.2. Téléverser un ou plusieurs scans (drag & drop ou bouton).
+3.3. Cliquer sur "Générer le PDF" ; la réponse (PDF) provient de Fly.io.
+3.4. Vérifier le PDF (tri par animal, codes EAN + codes-barres, cases OK/Qté).
+
+Notes de sécurité :
+- La clé Gemini reste côté Fly.io (`fly secrets`).
+- `ALLOWED_ORIGINS` accepte plusieurs domaines séparés par des virgules si besoin.

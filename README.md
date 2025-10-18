@@ -118,24 +118,24 @@ Déploiement Netlify :
 2. `netlify deploy --dir=web` ou utilisez l’interface Netlify.
 3. Aucun champ à modifier côté client : le bouton “Générer le PDF” utilise l’URL définie dans `config.js`.
 
-⚠️ La clé Gemini doit rester côté serveur (dans `.env` ou vos secrets Render). L’interface web ne transmet que les fichiers d’images.
+⚠️ La clé Gemini doit rester côté serveur (dans `.env` ou via `fly secrets`). L’interface web ne transmet que les fichiers d’images.
 
-### Déploiement Render + Netlify (gratuit)
+### Déploiement Fly.io + Netlify (gratuit)
 
 1. **Publiez le code sur GitHub.**
-2. **Render (backend)**
-   - Créez un service « Web Service » à partir du dépôt GitHub.
-   - Paramètres :
-     - Runtime : *Python 3*  
-     - Build command : `pip install -r requirements.txt`
-     - Start command : `uvicorn api_server:app --host 0.0.0.0 --port 10000`
-   - Dans l’onglet *Environment*, ajoutez :
-     - `GEMINI_API_KEY` = votre clé
-     - `ALLOWED_ORIGINS` = `https://votre-site-netlify.netlify.app`
-   - Choisissez le plan gratuit et déployez. Notez l’URL Render (ex: `https://delivery-transformer.onrender.com`).
-3. **Netlify (front-end)**
+2. **Fly.io (backend)**
+   - Installez la CLI : `curl -L https://fly.io/install.sh | sh`
+   - Depuis le repository : `fly launch --no-deploy` (acceptez la détection Dockerfile).
+   - Définissez vos secrets :
+     ```bash
+     fly secrets set GEMINI_API_KEY=sk-...
+     fly secrets set ALLOWED_ORIGINS=https://votre-site-netlify.netlify.app
+     ```
+   - Déployez : `fly deploy`
+   - L’API est disponible via `https://<app-name>.fly.dev/` (POST `/transform`).
+3. **Netlify (front-end)** *(voir aussi `DEPLOY_FLY_NETLIFY.txt`)*
    - Créez un nouveau site et pointez le répertoire `web/`.
-   - Dans le fichier `web/index.html`, remplacez la valeur du champ URL par l’endpoint Render (`https://.../transform`), puis déployez.
+   - Dans `web/config.js`, définissez `apiEndpoint` sur `https://<app-name>.fly.dev/transform` puis déployez.
    - Sur le site publié, l’URL de l’API est déjà renseignée ; uploadez des images, cliquez sur « Générer le PDF ».
 
 > Si vous préférez limiter l’accès à plusieurs domaines, listez-les séparés par des virgules dans `ALLOWED_ORIGINS`.
