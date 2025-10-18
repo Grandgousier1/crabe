@@ -10,7 +10,7 @@ Le projet propose :
 ## Prérequis
 
 - Python 3.10+
-- `pdflatex` accessible dans le `PATH` **ou** `tectonic` (installé automatiquement via `pip install -r requirements.txt`)
+- `pdflatex` accessible dans le `PATH` (via TeX Live ou équivalent). Sur Render, ajoutez `apt.txt` fourni pour installer TeX Live lors du build.
 - Clé API Gemini stockée côté serveur/CLI (voir ci-dessous)
 
 ## Installation
@@ -36,7 +36,7 @@ GEMINI_API_KEY=sk-...
 La CLI et l'API chargent automatiquement cette valeur (via `python-dotenv`).  
 Vous pouvez aussi définir la variable d'environnement dans votre système.
 
-> Le rendu PDF privilégie `pdflatex` lorsqu'il est disponible. Si ce n'est pas le cas (comme sur Render), la dépendance `tectonic` incluse est utilisée automatiquement.
+> Le rendu PDF nécessite un moteur LaTeX. Ajoutez TeX Live à votre environnement (par exemple via `apt-get install texlive-latex-base`). Sur Render, le fichier `apt.txt` assure cette installation.
 
 ## CLI (mode batch)
 
@@ -127,6 +127,7 @@ Déploiement Netlify :
    - Créez un service « Web Service » à partir du dépôt GitHub.
    - Paramètres :
      - Runtime : *Python 3*  
+     - Ajoutez `apt.txt` (inclus) pour installer TeX Live (`texlive-latex-base`/`extra`).
      - Build command : `pip install -r requirements.txt`
      - Start command : `uvicorn api_server:app --host 0.0.0.0 --port 10000`
    - Dans l’onglet *Environment*, ajoutez :

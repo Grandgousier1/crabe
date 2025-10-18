@@ -476,7 +476,7 @@ def compile_latex(
         engine = "tectonic"
     if not engine_path:
         raise RuntimeError(
-            "Aucun moteur LaTeX trouvé. Installez `pdflatex` ou ajoutez `tectonic`."
+            "Aucun moteur LaTeX trouvé (pdflatex/tectonic). Installez TeX Live ou ajoutez tectonic."
         )
 
     with tempfile.TemporaryDirectory() as tmpdir:
