@@ -10,7 +10,6 @@ Prérequis :
 1.1. Créez un service “Web Service” à partir du dépôt GitHub.
 1.2. Paramètres :
      - Runtime : Python 3 (plan gratuit suffisant)
-     - Ajoutez `apt.txt` (fourni) pour installer TeX Live automatiquement.
      - Build command : `pip install -r requirements.txt`
      - Start command : `uvicorn api_server:app --host 0.0.0.0 --port 10000`
      - (Optionnel) Env var `PYTHON_VERSION=3.11.8`
@@ -20,6 +19,7 @@ Prérequis :
 1.4. Déployez. L’URL Render ressemblera à :
      `https://delivery-transformer.onrender.com`
 1.5. Vérifiez la santé : ouvrez `https://.../health` dans le navigateur, vous devez obtenir `{"status":"ok"}`.
+     (Le premier rendu PDF téléchargera automatiquement le binaire standalone de Tectonic si besoin.)
 
 2. Préparer Netlify (frontend gratuit)
 --------------------------------------

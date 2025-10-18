@@ -7,6 +7,8 @@ import mimetypes
 import shutil
 import subprocess
 import tempfile
+import tarfile
+import urllib.request
 from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path
@@ -475,8 +477,12 @@ def compile_latex(
         engine_path = shutil.which("tectonic")
         engine = "tectonic"
     if not engine_path:
+        engine_path = ensure_local_tectonic()
+        if engine_path:
+            engine = "tectonic"
+    if not engine_path:
         raise RuntimeError(
-            "Aucun moteur LaTeX trouvé (pdflatex/tectonic). Installez TeX Live ou ajoutez tectonic."
+            "Aucun moteur LaTeX trouvé (pdflatex/tectonic). Impossible de générer le PDF."
         )
 
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -526,6 +532,41 @@ def compile_latex(
         if keep_tex:
             final_tex = output_pdf.with_suffix(".tex")
             shutil.copy2(tex_path, final_tex)
+
+
+def ensure_local_tectonic() -> Optional[str]:
+    """Download a standalone Tectonic binary if none is available."""
+    version = "0.14.3"
+    cache_dir = Path.home() / ".cache" / "delivery_transformer" / "tectonic"
+    binary_path = cache_dir / "tectonic"
+
+    if binary_path.exists():
+        return str(binary_path)
+
+    download_url = (
+        f"https://github.com/tectonic-typesetting/tectonic/releases/download/"
+        f"tectonic@{version}/tectonic-{version}-x86_64-unknown-linux-gnu.tar.gz"
+    )
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    archive_path = cache_dir / "tectonic.tar.gz"
+
+    try:
+        with urllib.request.urlopen(download_url) as response, archive_path.open("wb") as out:
+            shutil.copyfileobj(response, out)
+        with tarfile.open(archive_path, "r:gz") as tar:
+            for member in tar.getmembers():
+                if member.isfile() and member.name.endswith("/tectonic"):
+                    member.name = Path(member.name).name  # strip directories
+                    tar.extract(member, path=cache_dir)
+                    break
+        extracted_binary = cache_dir / "tectonic"
+        extracted_binary.chmod(0o755)
+        return str(extracted_binary)
+    except Exception:
+        return None
+    finally:
+        if archive_path.exists():
+            archive_path.unlink(missing_ok=True)
 
 
 def group_items_by_category(items: Iterable[DeliveryItem]) -> Dict[str, List[DeliveryItem]]:
